@@ -20,7 +20,6 @@ boolean hasNewCommand = false;
 void setup() {
   // Serial
   Serial.begin(115200);
-  //inputString.reserve(200);
   // Motors
   AFMS.begin();
   myMotor1->setSpeed(0);
@@ -32,7 +31,8 @@ void setup() {
 
 void loop() {
   if (hasNewCommand) {
-    Serial.println("new input command");
+    //Serial.println("new input command");
+    hasNewCommand = false;
     handleCommand();
   }
 }
@@ -41,10 +41,8 @@ void handleCommand() {
     byte type = command[0];
     switch (type) {
       case 0x00: 
-        Serial.println("REBOOT"); 
         break;
       case 0x01: 
-        Serial.println("ENGINE"); 
         handleEngineCommand();
         break;
     }
@@ -84,6 +82,13 @@ void updateMotors(byte loc, byte dir, byte powr) {
 
 void serialEvent() {
   Serial.readBytes(command, 4);
+  Serial.print(command[0]);
+  Serial.print("  ");
+  Serial.print(command[1]);
+  Serial.print("  ");
+  Serial.print(command[2]);
+  Serial.print("  ");
+  Serial.println(command[3]);
   hasNewCommand = true;
 }
 
